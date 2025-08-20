@@ -2,12 +2,11 @@
 indicator("Nokor Traders CRT", overlay=true)
 
 // ————————————————————
-// HEIKIN ASHI CANDLES
+// HEIKIN ASHI SETTINGS
 // ————————————————————
 group_ha = "Heikin Ashi Settings"
-ShowCandles = input.bool(true, title="Show Heikin Ashi Candles", group=group_ha, tooltip="Display Heikin Ashi candles.")
-ShowAvg = input.bool(true, title="Show Heikin Ashi Moving Average", group=group_ha, tooltip="Display a moving average based on the Heikin Ashi bars.")
-len = input.int(25, minval=1, maxval=500, title="Length", group=group_ha, tooltip="Set moving average length.")
+ShowAvg = input.bool(true, title="Show Heikin Ashi Moving Average", group=group_ha)
+len = input.int(25, minval=1, maxval=500, title="Length", group=group_ha)
 
 // Heikin Ashi calculation
 haClose = (open + high + low + close) / 4
@@ -18,15 +17,14 @@ haLow = math.min(low, math.min(haOpen, haClose))
 
 col_ha = haClose > haOpen ? color.green : color.red
 
-// Toggle HA Candles — will NOT appear in Style if disabled
-if ShowCandles
-    plotcandle(haOpen, haHigh, haLow, close, color=col_ha, bordercolor=col_ha, title="Heikin Ashi Candles - Actual Close")
+// ❌ Removed plotcandle() → no "Style" entry anymore
 
-// HA Moving Average
+// Heikin Ashi Moving Average
 avg_ha = (haOpen + haHigh + haLow + haClose) / 4
 HA_movingAverage = ta.wma(avg_ha, len)
 col_ma = HA_movingAverage > HA_movingAverage[1] ? color.green : color.red
 plot(ShowAvg ? HA_movingAverage : na, color=col_ma, title="Heikin Ashi Moving Average")
+
 
 
 // ————————————————————
@@ -209,38 +207,38 @@ htf3.settings.max_display       := input.int(10, '', inline = 'htf3')
 htf4.settings.show              := input.bool(true, 'HTF 4      ', inline = 'htf4')
 htf_4                           = input.timeframe('240', '', inline = 'htf4')
 htf4.settings.htf               := htf_4
-htf4.settings.max_display       := input.int(6, '', inline = 'htf4')
+htf4.settings.max_display       := input.int(5, '', inline = 'htf4')
 
 htf5.settings.show              := input.bool(true, 'HTF 5      ', inline = 'htf5')
 htf_5                           = input.timeframe('1D', '', inline = 'htf5')
 htf5.settings.htf := htf_5
-htf5.settings.max_display       := input.int(6, '', inline = 'htf5')
+htf5.settings.max_display       := input.int(4, '', inline = 'htf5')
 
-htf6.settings.show              := input.bool(false, 'HTF 6      ', inline = 'htf6')
+htf6.settings.show              := input.bool(true, 'HTF 6      ', inline = 'htf6')
 htf_6                           = input.timeframe('1W', '', inline = 'htf6')
 htf6.settings.htf               := htf_6
-htf6.settings.max_display       := input.int(10, '', inline = 'htf6')
+htf6.settings.max_display       := input.int(3, '', inline = 'htf6')
 
 settings.max_sets               := input.int(6, 'Limit to next HTFs only', minval = 1, maxval = 6)
 settings.use_custom_daily       := input.bool(false, 'Custom daily candle open     ', inline='customdaily')
 settings.custom_daily           := input.string('Midnight', '', options=['Midnight', '8:30', '9:30'], inline='customdaily')
-settings.bull_body              := input.color(color.new(#17b1a4, 10), 'Body  ', inline = 'body', group=group_style)
-settings.bear_body              := input.color(color.new(#464646, 10), '', inline = 'body', group=group_style)
-settings.bull_border            := input.color(color.new(color.black, 10), 'Borders', inline = 'borders', group=group_style)
-settings.bear_border            := input.color(color.new(color.black, 10), '', inline = 'borders', group=group_style)
-settings.bull_wick              := input.color(color.new(color.black, 10), 'Wick  ', inline = 'wick', group=group_style)
-settings.bear_wick              := input.color(color.new(color.black, 10), '', inline = 'wick', group=group_style)
+settings.bull_body              := input.color(color.new(#acb1bf, 10), 'Body  ', inline = 'body', group=group_style)
+settings.bear_body              := input.color(color.new(#242c2b, 10), '', inline = 'body', group=group_style)
+settings.bull_border            := input.color(color.new(#acb1bf, 10), 'Borders', inline = 'borders', group=group_style)
+settings.bear_border            := input.color(color.new(#242c2b, 10), '', inline = 'borders', group=group_style)
+settings.bull_wick              := input.color(color.new(#242c2b, 10), 'Wick  ', inline = 'wick', group=group_style)
+settings.bear_wick              := input.color(color.new(#242c2b, 10), '', inline = 'wick', group=group_style)
 
-settings.offset                 := input.int(25, 'padding from current candles', minval = 1, group=group_style)
+settings.offset                 := input.int(40, 'padding from current candles', minval = 1, group=group_style)
 settings.buffer                 := input.int(1, 'space between candles', minval = 1, maxval = 4, group=group_style)
 settings.htf_buffer             := input.int(10, 'space between Higher Timeframes', minval = 1, maxval = 10, group=group_style)
-settings.width                  := input.int(1, 'Candle Width', minval = 1, maxval = 4, group=group_style) * 2
+settings.width                  := input.int(4, 'Candle Width', minval = 1, maxval = 4, group=group_style) * 2
 
 settings.htf_label_show         := input.bool(true, 'HTF Label           ', group=group_label, inline = 'HTFlabel')
 settings.htf_label_color        := input.color(color.new(color.black, 10), '', group=group_label, inline = 'HTFlabel')
 settings.htf_label_size         := input.string(size.large, '', [size.tiny, size.small, size.normal, size.large, size.huge], group=group_label, inline = 'HTFlabel')
 
-settings.label_position         := input.string("Top", 'Label Positions', options=['Both', 'Top', 'Bottom'], group=group_label)
+settings.label_position         := input.string("Bottom", 'Label Positions', options=['Both', 'Top', 'Bottom'], group=group_label)
 settings.label_alignment        := input.string("Follow Candles", "Label Alignment", options=['Align', 'Follow Candles'], group=group_label)
 
 settings.htf_timer_show         := input.bool(false, 'Remaining time      ', inline = 'timer', group=group_label)
