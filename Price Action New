@@ -2762,4 +2762,5 @@ if barstate.isfirst
     table.cell(errorBox,  0,  0,  "Â© Stratify",   text_color = color.gray, text_halign = text.align_center, text_size = size.normal)
     
 
+    
 
