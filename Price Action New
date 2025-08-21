@@ -1,15 +1,15 @@
 
-// This work is licensed under a Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) https://creativecommons.org/licenses/by-nc-sa/4.0/
+// Making Version
 
 //@version=5
-indicator("Price Action Concepts", shorttitle = "Price Action Concepts [1.0]", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500, max_polylines_count = 100)
+indicator("Market Structure By Sunny", shorttitle = "Market Structure By Sunny", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500, max_polylines_count = 100)
 
 
 
 // Liquidity Concepts
 lookback = input.int(12,"Pivot Point Length",minval = 2,group = "ðŸ§Š Liquidity Concepts")
 liq_valid = input.int(7,"Liquidation Validity",minval = 1,tooltip = "Measure how many candles should max pass to count as liquidity. Ex: if set to 7, the liquidation should happen in those 7 bars; otherwise, it is not valid.",inline = "AA",group = "Inputs")
-liq_bool = input.bool(true,"Use Pivot Length",inline = "AA",group = "ðŸ§Š Liquidity Concepts")
+liq_bool = input.bool(false,"Use Pivot Length",inline = "AA",group = "ðŸ§Š Liquidity Concepts")
 
 
 switch liq_bool
@@ -663,7 +663,7 @@ show_internal_ms                = input.string      ("All"                      
 internal_r_lookback             = input.int         (5                                , ""                            , inline = "2", group = "MARKET STRUCTURE"            , minval = 2)
 swing_r_lookback                = input.int         (50                               , ""                            , inline = "1", group = "MARKET STRUCTURE"            , minval = 2)
 ms_mode                         = input.string      ("Manual"                         , "Market Structure Mode"       , inline = "a", group = "MARKET STRUCTURE"            , tooltip = "[Manual] Use selected lenght\n[Dynamic] Use automatic lenght" ,options = ["Manual", "Dynamic"])
-show_mtf_str                    = input.bool        (true                             , "MTF Scanner"                 , inline = "9", group = "MARKET STRUCTURE"            , tooltip = "Display Multi-Timeframe Market Structure Trend Directions. Green = Bullish. Red = Bearish")
+show_mtf_str                    = input.bool        (false                            , "MTF Scanner"                 , inline = "9", group = "MARKET STRUCTURE"            , tooltip = "Display Multi-Timeframe Market Structure Trend Directions. Green = Bullish. Red = Bearish")
 show_eql                        = input.bool        (false                            , "Show EQH/EQL"                , inline = "6", group = "MARKET STRUCTURE")
 plotcandle_bool                 = input.bool        (false                            , "Plotcandle"                  , inline = "3", group = "MARKET STRUCTURE"            , tooltip = "Displays a cleaner colored candlestick chart in place of the default candles. (requires hiding the current ticker candles)")
 barcolor_bool                   = input.bool        (false                            , "Bar Color"                   , inline = "4", group = "MARKET STRUCTURE"            , tooltip = "Color the candle bodies according to market strucutre trend")
@@ -686,9 +686,9 @@ s_w                             = input.string      ('âŽ¯âŽ¯âŽ¯'       
 s_m                             = input.string      ('âŽ¯âŽ¯âŽ¯'                            , ''                            , inline = '3', group = 'HIGHS & LOWS MTF'                , options = ['âŽ¯âŽ¯âŽ¯', '----', 'Â·Â·Â·Â·'])
 s_y                             = input.string      ('âŽ¯âŽ¯âŽ¯'                            , ''                            , inline = '4', group = 'HIGHS & LOWS MTF'                , options = ['âŽ¯âŽ¯âŽ¯', '----', 'Â·Â·Â·Â·'])
 
-ob_show                         = input.bool        (true                             , "Show Lastâ€„â€„â€„â€„"               , inline = "1", group = "VOLUMETRIC ORDER BLOCKS"         , tooltip = "Display volumetric order blocks on the chart \n\n[Input] Ammount of volumetric order blocks to show")
+ob_show                         = input.bool        (false                            , "Show Lastâ€„â€„â€„â€„"               , inline = "1", group = "VOLUMETRIC ORDER BLOCKS"         , tooltip = "Display volumetric order blocks on the chart \n\n[Input] Ammount of volumetric order blocks to show")
 ob_num                          = input.int         (5                                , ""                            , inline = "1", group = "VOLUMETRIC ORDER BLOCKS"         , tooltip = "Orderblocks number", minval = 1, maxval = 10)
-ob_metrics_show                 = input.bool        (true                             , "Internal Buy/Sell Activity"  , inline = "2", group = "VOLUMETRIC ORDER BLOCKS"         , tooltip = "Display volume metrics that have formed the orderblock")
+ob_metrics_show                 = input.bool        (false                            , "Internal Buy/Sell Activity"  , inline = "2", group = "VOLUMETRIC ORDER BLOCKS"         , tooltip = "Display volume metrics that have formed the orderblock")
 css_metric_up                   = input.color       (color.new(#089981,  50)        , "â€„â€„â€„â€„â€„â€„â€„â€„â€„"                   , inline = "2", group = "VOLUMETRIC ORDER BLOCKS")
 css_metric_dn                   = input.color       (color.new(#f23645 , 50)        , ""                            , inline = "2", group = "VOLUMETRIC ORDER BLOCKS")
 ob_swings                       = input.bool        (false                            , "Swing Order Blocks"          , inline = "a", group = "VOLUMETRIC ORDER BLOCKS"         , tooltip = "Display swing volumetric order blocks")
@@ -711,7 +711,7 @@ acc_css                         = input.color       (color.new(#089981   , 60)  
 dist_css                        = input.color       (color.new(#f23645   , 60)      , ""                            , inline = "1", group = "Accumulation And Distribution")
 
 show_lbl                        = input.bool        (false                            , "Show swing point"            , inline = "1", group = "High and Low"                    , tooltip = "Display swing point")
-show_mtb                        = input.bool        (true                            , "Show High/Low/Equilibrium"   , inline = "2", group = "High and Low"                    , tooltip = "Display Strong/Weak High And Low and Equilibrium")
+show_mtb                        = input.bool        (false                           , "Show High/Low/Equilibrium"   , inline = "2", group = "High and Low"                    , tooltip = "Display Strong/Weak High And Low and Equilibrium")
 toplvl                          = input.color       (color.red                      , "Premium Zoneâ€„â€„â€„"             , inline = "3", group = "High and Low")
 midlvl                          = input.color       (color.white                    , "Equilibrium Zone"            , inline = "4", group = "High and Low")
 btmlvl                          = input.color       (#089981                        , "Discount Zoneâ€„â€„â€„â€„"           , inline = "5", group = "High and Low")
