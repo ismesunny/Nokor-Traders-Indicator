@@ -1,0 +1,101 @@
+//@version=5
+indicator("My Emotion Check", overlay=true, max_lines_count=500, max_labels_count=5, max_boxes_count=500)
+
+//---------------------------------------------- 
+
+BIAS_M_Bool             = input.bool(true, "", group="BIAS & NOTES", inline="stats")
+txt100                  = input.string("BIAS", title="", inline="stats", group="BIAS & NOTES")
+TableBG2                = color.new(#131722, 100)
+Tab2txtCol              = input.color(color.new(#787b86, 0), "", inline='stats', group="BIAS & NOTES")
+TabOption2              = input.string("Bottom Right", "", options=["Top Left", "Top Center", "Top Right", "Middle Left", "Middle Right", "Bottom Left", "Bottom Center", "Bottom Right"], inline="stats", group="BIAS & NOTES")
+tabinp2                 = TabOption2 == "Top Left" ? position.top_left : TabOption2 == "Top Center" ? position.top_center : TabOption2 == "Top Right" ? position.top_right : TabOption2 == "Middle Left" ? position.middle_left : TabOption2 == "Middle Right" ? position.middle_right : TabOption2 == "Bottom Left" ? position.bottom_left : TabOption2 == "Bottom Center" ? position.bottom_center : position.bottom_right
+notesbool = false
+
+NOTES_M_Bool            = input.bool(true, "", group="BIAS & NOTES", inline="stats2")
+txt101                  = input.string("NOTES", title="", inline="stats2", group="BIAS & NOTES")
+Tab3txtCol              = input.color(color.new(#787b86, 0), "", inline='stats2', group="BIAS & NOTES")
+TabOption3              = input.string("Top Center", "", options=["Top Left", "Top Center", "Top Right", "Middle Left", "Middle Right", "Bottom Left", "Bottom Center", "Bottom Right"], inline="stats2", group="BIAS & NOTES")
+tabinp3                 = TabOption3 == "Top Left" ? position.top_left : TabOption3 == "Top Center" ? position.top_center : TabOption3 == "Top Right" ? position.top_right : TabOption3 == "Middle Left" ? position.middle_left : TabOption3 == "Middle Right" ? position.middle_right : TabOption3 == "Bottom Left" ? position.bottom_left : TabOption3 == "Bottom Center" ? position.bottom_center : position.bottom_right
+
+BIASbool1               = input.bool(true, '', inline="BIAS1", group="BIAS & NOTES")
+txt52                   = input.string("Are there any CRT still not complete yet?", title="", inline="BIAS1", group="BIAS & NOTES")
+BIASOption1             = input.string("No", options=["Yes", "No", "Unclear"], title="", inline="BIAS1", group="BIAS & NOTES")
+
+BIASbool2               = input.bool(true, '', inline="BIAS2", group="BIAS & NOTES")
+txt53                   = input.string("4H sweep", title="", inline="BIAS2", group="BIAS & NOTES")
+BIASOption2             = input.string("Yes", options=["Yes", "No", "Unclear"], title="", inline="BIAS2", group="BIAS & NOTES")
+
+BIASbool3               = input.bool(true, '', inline="BIAS3", group="BIAS & NOTES")
+txt54                   = input.string("Heikin Ashi break yet?", title="", inline="BIAS3", group="BIAS & NOTES")
+BIASOption3             = input.string("Yes", options=["Yes", "No", "Unclear"], title="", inline="BIAS3", group="BIAS & NOTES")
+
+BIASbool4               = input.bool(true, '', inline="BIAS4", group="BIAS & NOTES")
+txt55                   = input.string("Retest", title="", inline="BIAS4", group="BIAS & NOTES")
+BIASOption4             = input.string("FVG", options=["FVG", "OB", "CISD", "Break Heikin ashi"], title="", inline="BIAS4", group="BIAS & NOTES")
+
+BIASbool5               = input.bool(true, '', inline="BIAS5", group="BIAS & NOTES")
+txt56                   = input.string("Are you FOMO or revenge trade?", title="", inline="BIAS5", group="BIAS & NOTES")
+BIASOption5             = input.string("No", options=["Yes", "No", "50:50"], title="", inline="BIAS5", group="BIAS & NOTES")
+
+BIASbool6               = input.bool(true, '', inline="BIAS6", group="BIAS & NOTES")
+txt57                   = input.string("What type Daily is that", title="", inline="BIAS6", group="BIAS & NOTES")
+BIASOption6             = input.string("CRT Buy", options=["CRT Buy", "CRT Sell", "No idea"], title="", inline="BIAS6", group="BIAS & NOTES")
+
+BIASbool7               = input.bool(true, '', inline="BIAS7", group="BIAS & NOTES")
+txt58                   = input.string("Feeling Result", title="", inline="BIAS7", group="BIAS & NOTES")
+notes                   = input.text_area("Custom Text Box", "Notes", group = "BIAS & NOTES")
+
+// Color Coding
+var color comp_green            = color.new(#1cac78,0)
+var color comp_red              = color.new(#ff4040,0)
+var color comp_gray             = color.new(#808080,0)
+
+var color Option1CC             = na
+var color Option2CC             = na
+var color Option3CC             = na
+var color Option4CC             = na
+var color Option5CC             = na
+var color Option6CC             = na
+var color Option7CC             = na
+
+// Assign colors for options
+Option1CC := BIASOption1 == "Yes" ? comp_green : BIASOption1 == "No" ? comp_red : Tab2txtCol
+Option2CC := BIASOption2 == "Yes" ? comp_green : BIASOption2 == "No" ? comp_red : Tab2txtCol
+Option3CC := BIASOption3 == "Yes" ? comp_green : BIASOption3 == "No" ? comp_red : Tab2txtCol
+Option4CC := BIASOption4 == "FVG" ? comp_green : BIASOption4 == "OB" ? comp_red : Tab2txtCol
+Option5CC := BIASOption5 == "Yes" ? comp_green : BIASOption5 == "No" ? comp_red : Tab2txtCol
+Option6CC := BIASOption6 == "CRT Buy" ? comp_green : BIASOption6 == "CRT Sell" ? comp_red : Tab2txtCol
+
+// ===== Auto-calculate BIASOption7 =====
+BIASOption7_auto = BIASOption1 == "No" and BIASOption2 == "Yes" and BIASOption3 == "Yes" and BIASOption5 == "No" ? "Can Trade" : "Can't Trade"
+Option7CC := BIASOption7_auto == "Can Trade" ? comp_green : comp_red
+
+// ===== Create Table =====
+var table BIAS_Table = table.new(tabinp2, 2, 20, bgcolor=TableBG2, border_width=1)
+if barstate.islast and BIAS_M_Bool
+    if BIASbool1
+        table.cell(BIAS_Table, 0, 1, text = txt52, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 1, text = BIASOption1, text_size = size.normal, text_color = Option1CC, text_halign=text.align_right)
+    if BIASbool2
+        table.cell(BIAS_Table, 0, 2, text = txt53, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 2, text = BIASOption2, text_size = size.normal, text_color = Option2CC, text_halign=text.align_right)
+    if BIASbool3
+        table.cell(BIAS_Table, 0, 3, text = txt54, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 3, text = BIASOption3, text_size = size.normal, text_color = Option3CC, text_halign=text.align_right)
+    if BIASbool4
+        table.cell(BIAS_Table, 0, 4, text = txt55, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 4, text = BIASOption4, text_size = size.normal, text_color = Option4CC, text_halign=text.align_right)
+    if BIASbool5
+        table.cell(BIAS_Table, 0, 5, text = txt56, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 5, text = BIASOption5, text_size = size.normal, text_color = Option5CC, text_halign=text.align_right)
+    if BIASbool6
+        table.cell(BIAS_Table, 0, 6, text = txt57, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 6, text = BIASOption6, text_size = size.normal, text_color = Option6CC, text_halign=text.align_right)
+    if BIASbool7
+        table.cell(BIAS_Table, 0, 7, text = txt58, text_color = Tab2txtCol, text_halign=text.align_left)
+        table.cell(BIAS_Table, 1, 7, text = BIASOption7_auto, text_size = size.normal, text_color = Option7CC, text_halign=text.align_right)
+
+// ===== Notes Table =====
+var table NOTES_Table = table.new(tabinp3, 1, 20, bgcolor = TableBG2, border_width = 1)
+if barstate.islast and NOTES_M_Bool
+    table.cell(NOTES_Table, 0,0, text = notes, text_size = size.normal, text_color = Tab3txtCol, text_halign=text.align_center)

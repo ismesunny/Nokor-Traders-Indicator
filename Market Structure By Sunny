@@ -2759,7 +2759,8 @@ alertcondition(bralert.obtouch       , "Candle Entering in a Bearish Order Block
 
 if barstate.isfirst
     var table errorBox = table.new(position.bottom_right, 1, 1, bgcolor = color.new(#363a45, 100))
-    table.cell(errorBox,  0,  0,  " ",   text_color = color.gray, text_halign = text.align_center, text_size = size.normal)
+    table.cell(errorBox,  0,  0,  "Â© Stratify",   text_color = color.gray, text_halign = text.align_center, text_size = size.normal)
     
 
+    
 
